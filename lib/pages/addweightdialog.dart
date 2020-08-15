@@ -4,146 +4,95 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:weight_tracker/model/weight.dart';
+import 'package:flutter_date_pickers/flutter_date_pickers.dart' as dp;
+import 'package:weight_tracker/uielements/datepicker.dart';
+import 'package:weight_tracker/uielements/weightPicker.dart';
 
 class AddEntryDialog extends StatefulWidget {
-  double initialweight;
-  AddEntryDialog({this.initialweight});
+  Weight previousorlastweight;
+  bool iseditoperation;
+  AddEntryDialog({this.previousorlastweight,this.iseditoperation});
   @override
-  AddEntryDialogState createState() => new AddEntryDialogState(weight: initialweight);
+  AddEntryDialogState createState() => new AddEntryDialogState();
 }
 
 class AddEntryDialogState extends State<AddEntryDialog> {
-  DateTime _dateTime = new DateTime.now();
-  double weight;
-  AddEntryDialogState({this.weight});
+  DateTime _selectedDate=DateTime.now();
+  double _selectedweight=60;
+  void  updateselectedDateTime(DateTime selectedDatetime)
+  {
+    print(selectedDatetime);
+   setState(() {
+     this._selectedDate=selectedDatetime;
+   });
+  }
+  void  updateselectedweight(double selectedweight)
+  {
+    print(selectedweight);
+   setState(() {
+     this._selectedweight=selectedweight;
+   });
+  }
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Colors.black,
       appBar: _createAppBar(context),
-      body: new Column(
+      body: Container(
+        margin: EdgeInsets.only(top: 20),
+        child:  new Column(
         children: [
-          new ListTile(
-            leading: new Icon(Icons.today, color: Colors.grey[500]),
-            title: new DateTimeItem(_dateTime,(dateTime) => setState(() => _dateTime = dateTime))
+          Visibility(
+            child:  new DatePicker(setparentselectedDate: updateselectedDateTime),
+            visible: !widget.iseditoperation,
           ),
-          new ListTile(
-            leading: new Image.asset(
-              "assets/scale-bathroom.png",
-              color: Colors.grey[500],
-              height: 24.0,
-              width: 24.0,
-            ),
-            title: new Text(weight==0?60.toString()+" kg":weight.toString()+" kg",),
-            onTap: () => _showWeightPicker(context),
+          widget.previousorlastweight==null?
+              new WeightPicker(setWeight: updateselectedweight,previousweight: 60)
+              :
+              new WeightPicker(setWeight: updateselectedweight,previousweight: widget.previousorlastweight.weight)
+        ]),
+      ),
+     floatingActionButton: Container(
+                decoration: new BoxDecoration(color: Theme.of(context).accentColor,borderRadius: BorderRadius.all(Radius.circular(50)),),
+                width: 250.0,
+                height: 50.0,
+                child: new RawMaterialButton(
+                  shape: new CircleBorder(),
+                  elevation: 0.0,
+                  child: Text("Save",style: TextStyle(fontFamily: 'roboto',fontSize: 20,fontWeight: FontWeight.bold),),
+                onPressed: (){
+                    Navigator
+                  .of(context)
+                  .pop(new Weight(weight: _selectedweight,dateTime: _selectedDate));
+                  },
+                )
           ),
-    ]));
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
+     );
   }
 
   @override
   void initState() {
     super.initState();
   }
-  _showWeightPicker(BuildContext context) {
-    showDialog(
-      context: context,
-      child: new NumberPickerDialog.decimal(
-        minValue: 0,
-        maxValue: 150,
-        initialDoubleValue: weight==0?60:weight,
-        title: new Text("Enter your weight"),
-      ),
-    ).then((value) {
-      if (value != null) {
-        setState(() => weight = value);
-      }
-    });
-  }
   Widget _createAppBar(BuildContext context) {
     return new AppBar(
-      title: const Text('New entry'),
+      title: widget.iseditoperation?const Text('Edit weight'):const Text('Add weight'),
+      backgroundColor: Colors.black,
       actions: [
-        new FlatButton(
+        Visibility(
+          visible: widget.iseditoperation,
+          child:new FlatButton(
             onPressed: () {
               Navigator
                   .of(context)
-                  .pop(new Weight(
-                  weight: weight,
-                  dateTime: _dateTime));
+                  .pop(new Weight(weight: null,dateTime: null));
             },
-            child: new Text('SAVE',
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .subhead
-                    .copyWith(color: Colors.white))),
+            child: Icon(Icons.delete,color: Colors.white))
+
+        )
+
       ],
     );
-  }
-}
-
-
-
-class DateTimeItem extends StatelessWidget {
-    DateTime date;
-   TimeOfDay time;
-   ValueChanged<DateTime> onChanged;
-  DateTimeItem(DateTime date, ValueChanged<DateTime> onchanged){
-    this.date=date;
-    this.onChanged=onchanged;
-    this.time=TimeOfDay.fromDateTime(date);
-  }
-
-//        date = dateTime == null
-//            ? new DateTime.now()
-//            : new DateTime(dateTime.year, dateTime.month, dateTime.day),
-//        time = dateTime == null
-//            ? new DateTime.now()
-//            : new TimeOfDay(hour: dateTime.hour, minute: dateTime.minute),
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return new Row(
-      children: <Widget>[
-        new Expanded(
-          child: new InkWell(
-            onTap: (() => _showDatePicker(context)),
-            child: new Padding(
-                padding: new EdgeInsets.symmetric(vertical: 8.0),
-                child: new Text(new DateFormat('EEEE, MMMM d').format(date))),
-          ),
-        ),
-        new InkWell(
-          onTap: (() => _showTimePicker(context)),
-          child: new Padding(
-              padding: new EdgeInsets.symmetric(vertical: 8.0),
-              child: new Text(time.format(context))),
-        ),
-      ],
-    );
-  }
-
-  Future _showDatePicker(BuildContext context) async {
-    DateTime dateTimePicked = await showDatePicker(
-        context: context,
-        initialDate: date,
-        firstDate: date.subtract(const Duration(days: 20000)),
-        lastDate: new DateTime.now());
-
-    if (dateTimePicked != null) {
-      onChanged(new DateTime(dateTimePicked.year, dateTimePicked.month,
-          dateTimePicked.day, time.hour, time.minute));
-    }
-  }
-
-  Future _showTimePicker(BuildContext context) async {
-    TimeOfDay timeOfDay =
-        await showTimePicker(context: context, initialTime: time);
-
-    if (timeOfDay != null) {
-      onChanged(new DateTime(
-          date.year, date.month, date.day, timeOfDay.hour, timeOfDay.minute));
-    }
   }
 }

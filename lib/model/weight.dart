@@ -7,9 +7,8 @@ class Weight {
   Weight( {this.weight,this.dateTime});
   toJson() {
     return {
-      "userId": userId,
       "weight": weight,
-      "datetime": dateTime.toString(),
+      "time": dateTime.toString(),
     };
   }
 }

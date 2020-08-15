@@ -180,6 +180,7 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
     if (errormessage.length > 0 && errormessage != null) {
       return new Text(
         errormessage,
+        textAlign: TextAlign.center,
         style: TextStyle(
             fontSize: 13.0,
             color: Colors.red,

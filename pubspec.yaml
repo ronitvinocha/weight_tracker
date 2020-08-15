@@ -29,7 +29,9 @@ dependencies:
   firebase_database: ^3.1.1
   provider: ^2.0.0
   numberpicker: "^0.1.0"
-  intl: ^0.15.7
+  intl: ^0.16.1
+  flutter_date_pickers: ^0.1.5
+  scrollable_positioned_list: ^0.1.7
 
 
   # The following adds the Cupertino Icons font to your application.
