@@ -50,16 +50,7 @@ class WeightListItemState extends State<WeightListItem> {
                       textAlign: TextAlign.left,
                       style: TextStyle(color:Colors.white),
                     ),
-                    new Row(children: [
-                       if(widget.weightDifference>0)
-                        Icon(widget.weightDifference>0?Icons.arrow_upward:Icons.arrow_downward,color:widget.weightDifference>0?Colors.red:Colors.green,size: 15,),
-                          new Text(
-                      _differenceText(widget.weightDifference),
-                      textAlign: TextAlign.right,
-                      style: widget.weightDifference>0?TextStyle(color: Colors.red,fontSize: 15):TextStyle(color: Colors.green,fontSize: 15) ,
-                    ),
-                    ]
-                    )
+                    difference(widget.weightDifference),
                   ],
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -117,7 +108,7 @@ class WeightListItemState extends State<WeightListItem> {
               return new AddEntryDialog(
                   previousorlastweight: previosweight, iseditoperation: true);
             },
-            fullscreenDialog: true
+            fullscreenDialog: false
         ));
     if (weight != null) {
       if (weight.weight == null && weight.dateTime == null) {
@@ -128,5 +119,49 @@ class WeightListItemState extends State<WeightListItem> {
       }
     }
   }
-
+  Widget difference(double weightdufference)
+  {
+     Color green=Colors.green;
+     Color red=Colors.red;
+     Color yellow=Colors.yellow;
+     Icon up=Icon(Icons.arrow_upward,color: red,);
+     Icon down=Icon(Icons.arrow_downward,color: green,);
+     Icon nochange=Icon(Icons.linear_scale,color: yellow,);
+     if(weightdufference==0)
+       {
+          return new Row(children: [
+           nochange,
+          new Text(
+            weightdufference.toStringAsFixed(1),
+            textAlign: TextAlign.right,
+            style: TextStyle(color: yellow,fontSize: 15) ,
+          ),
+        ]
+        );
+       }
+    else if(weightdufference>0)
+      {
+        return new Row(children: [
+           up,
+          new Text(
+            weightdufference.toStringAsFixed(1),
+            textAlign: TextAlign.right,
+            style: TextStyle(color: red,fontSize: 15) ,
+          ),
+        ]
+        );
+      }
+    else
+      {
+        return new Row(children: [
+           down,
+          new Text(
+            weightdufference.abs().toStringAsFixed(1),
+            textAlign: TextAlign.right,
+            style: TextStyle(color: green,fontSize: 15) ,
+          ),
+        ]
+        );
+      }
+  }
 }
