@@ -194,7 +194,6 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
         onPressed: toggleFormMode);
   }
   void toggleFormMode() {
-//    resetForm();
     setState(() {
       isloginform = !isloginform;
     });

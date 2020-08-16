@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class Weight {
   double weight;
   DateTime dateTime;

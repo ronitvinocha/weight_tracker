@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-
+//a widget for a weight picker stooping at int value but also select required weight on tap.
 class WeightPicker extends StatefulWidget{
   final ValueChanged<double> setWeight;
   final double previousweight ;
@@ -59,7 +58,7 @@ void firstscroll()
            children: [
             new Text(
             selectedweight.toString(),
-            style: TextStyle(fontSize: 60,color: Colors.white),
+            style: TextStyle(fontSize: 60,color: Colors.white,fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
             new Container(child:

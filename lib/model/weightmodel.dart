@@ -20,6 +20,7 @@ class WeightModel extends ChangeNotifier
 
   /// Adds [item] to cart. This and [removeAll] are the only ways to modify the
   /// cart from the outside.
+  //query and add
   void add(Weight weight) {
      dbref.push().set({
       "weight":weight.weight,
@@ -28,76 +29,39 @@ class WeightModel extends ChangeNotifier
          debugPrint(onError.toString());
      });
      getallweightfromdatabase(userid);
-//     sortusingdatetime();
-    // This call tells the widgets that are listening to this model to rebuild.
-//    notifyListeners();
   }
+  //querty and edit
   void edit(Weight weight,double newweight)
   {
-    print(weight.dateTime.toString());
     Query weightquery = dbref.orderByChild("time").equalTo(weight.dateTime.toString());
-    print(weightquery);
     weightquery.once().then((DataSnapshot dataSnapshot) {
-      print(dataSnapshot.value);
       Map<dynamic, dynamic> weightmap = dataSnapshot.value;
            weightmap.forEach((key, value) {
-             print(value);
               if(value['weight']==weight.weight)
                 {
-                    print(key);
                     weight.weight=newweight;
                     dbref.child(key.toString()).set(weight.toJson());
                     getallweightfromdatabase(userid);
                 }
           });
     });
-//    weightquery.on
-//    weightquery.addListenerForSingleValueEvent(new ValueEventListener() {
-//        @Override
-//        public void onDataChange(DataSnapshot dataSnapshot) {
-//            for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
-//                appleSnapshot.getRef().removeValue();
-//            }
-//        }
-//
-//        @Override
-//        public void onCancelled(DatabaseError databaseError) {
-//            Log.e(TAG, "onCancelled", databaseError.toException());
-//        }
-//    });
   }
+  //query and delete
   void delete(Weight weight)
   {
     Query weightquery = dbref.orderByChild("time").equalTo(weight.dateTime.toString());
-    print(weightquery.toString());
     weightquery.once().then((DataSnapshot dataSnapshot) {
-      print(dataSnapshot.value);
       Map<dynamic, dynamic> weightmap = dataSnapshot.value;
            weightmap.forEach((key, value) {
-             print(value);
-              if(value['weight']==weight.weight)
+            if(value['weight']==weight.weight)
                 {
-                    print(key);
                     dbref.child(key.toString()).remove();
                     getallweightfromdatabase(userid);
                 }
           });
     });
-//    weightquery.addListenerForSingleValueEvent(new ValueEventListener() {
-//        @Override
-//        public void onDataChange(DataSnapshot dataSnapshot) {
-//            for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
-//                appleSnapshot.getRef().removeValue();
-//            }
-//        }
-//
-//        @Override
-//        public void onCancelled(DatabaseError databaseError) {
-//            Log.e(TAG, "onCancelled", databaseError.toException());
-//        }
-//    });
-
-  }
+ }
+ //sorting by order of datetime
   void sortusingdatetime()
 {
   _items.sort((a,b)=>b.dateTime.compareTo(a.dateTime));
@@ -106,6 +70,7 @@ class WeightModel extends ChangeNotifier
       print("🍎${weight.weight}");
     }
 }
+//get all weigh inputs from firebase realtime database
   void getallweightfromdatabase(String userid){
       if(_items.length!=0)
         {
@@ -113,7 +78,6 @@ class WeightModel extends ChangeNotifier
         }
        dbref.once().then((DataSnapshot snapshot) {
         Map<dynamic, dynamic> weights = snapshot.value;
-        print("🙏🏻$weights");
          if(weights!=null)
             {
               weights.forEach((key,value) {

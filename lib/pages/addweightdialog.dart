@@ -1,10 +1,5 @@
-import 'dart:ffi';
-import 'dart:math';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'package:weight_tracker/model/weight.dart';
-import 'package:flutter_date_pickers/flutter_date_pickers.dart' as dp;
 import 'package:weight_tracker/uielements/datepicker.dart';
 import 'package:weight_tracker/uielements/weightPicker.dart';
 
@@ -21,14 +16,12 @@ class AddEntryDialogState extends State<AddEntryDialog> {
   double _selectedweight=60;
   void  updateselectedDateTime(DateTime selectedDatetime)
   {
-    print(selectedDatetime);
    setState(() {
      this._selectedDate=selectedDatetime;
    });
   }
   void  updateselectedweight(double selectedweight)
   {
-    print(selectedweight);
    setState(() {
      this._selectedweight=selectedweight;
    });
