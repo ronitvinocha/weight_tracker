@@ -114,7 +114,7 @@ class WeightListItemState extends State<WeightListItem> {
      Color yellow=Colors.yellow;
      Icon up=Icon(Icons.arrow_upward,color: red,);
      Icon down=Icon(Icons.arrow_downward,color: green,);
-     Icon nochange=Icon(Icons.linear_scale,color: yellow,);
+     Icon nochange=Icon(Icons.remove,color: yellow,);
      if(weightdufference==0)
        {
           return new Row(children: [

@@ -1,18 +1,19 @@
-import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weight_tracker/model/weight.dart';
 import 'package:weight_tracker/model/weightmodel.dart';
 import 'package:provider/provider.dart';
-import 'package:weight_tracker/uielements/weightlist.dart';
+import 'package:weight_tracker/pages/root.dart';
+import 'package:weight_tracker/services/auth.dart';
 import 'package:weight_tracker/uielements/weightlistitem.dart';
 
 import 'addweightdialog.dart';
 
 class WeightTracker extends StatefulWidget{
-  WeightTracker({this.userid});
-  final String userid;
+  BaseAuth auth;
+  WeightTracker({this.logoutcallback,this.auth});
+  VoidCallback logoutcallback;
   @override
   State<StatefulWidget> createState() => new _WeightTrackerPageState();
 }
@@ -30,14 +31,17 @@ class _WeightTrackerPageState extends State<WeightTracker>
   }
   @override
   Widget build(BuildContext context) {
-     WidgetsBinding.instance.addPostFrameCallback((_) => scrolltotop());
    return
      Consumer<WeightModel>(
        builder: (context,weighttrackker,child){
+         if(weighttrackker.items.length!=0)
+           {
+              WidgetsBinding.instance.addPostFrameCallback((_) => scrolltotop());
+           }
          return new Scaffold(
            body:new Container(
                decoration: BoxDecoration(color:Theme.of(context).primaryColor),
-                child: new Column(
+                child: weighttrackker.items.length==0?Center(child:Text("No weight input",style: TextStyle(color: Colors.white70,fontSize: 30))):new Column(
                 children: [
                 new Flexible(
                     child: new ListView.builder(
@@ -69,7 +73,8 @@ class _WeightTrackerPageState extends State<WeightTracker>
                     showAddWeightDialog(context,null);
                   },
                 )),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+           appBar: _createAppBar(context),
          );
           },
 
@@ -89,6 +94,23 @@ class _WeightTrackerPageState extends State<WeightTracker>
              Provider.of<WeightModel>(context).add(weight);
           }
         }
+        Widget _createAppBar(BuildContext context) {
+    return new AppBar(
+      title: Text("Weight Inputs"),
+      backgroundColor: Theme.of(context).primaryColor,
+      actions: [
+       new FlatButton(
+            onPressed: () {
+              widget.logoutcallback();
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => new RootPage(
+          auth: widget.auth)));
+            },
+            child: Icon(Icons.exit_to_app,color: Colors.white))
+
+      ],
+    );
+  }
 }
 
 

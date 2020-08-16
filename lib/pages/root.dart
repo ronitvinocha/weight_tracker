@@ -1,11 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weight_tracker/model/weightmodel.dart';
 import 'package:weight_tracker/services/auth.dart';
 import 'package:weight_tracker/pages/login.dart';
-import 'package:weight_tracker/uielements/logo.dart';
 import 'package:weight_tracker/pages/weighttracker.dart';
 
 enum AuthStatus {
@@ -43,14 +40,13 @@ class _RootPageState extends State<RootPage> {
           if (_userId.length > 0 && _userId != null) {
               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) =>
               new ChangeNotifierProvider<WeightModel>(builder: (context) => WeightModel(_userId),
-              child: new WeightTracker())
+              child: new WeightTracker(logoutcallback:logoutCallback,auth: widget.auth,))
               ),(Route<dynamic> route) => false);
           }
         }
         else {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => new LoginSignupPage(
-          auth: widget.auth,
-          loginCallback: loginCallback)));
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => new LoginSignupPage(
+          auth: widget.auth)),(Route<dynamic> route) => false);
           }
         authStatus =
             user?.uid == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
@@ -59,7 +55,7 @@ class _RootPageState extends State<RootPage> {
       firstimelogin=false;
       }
   }
-  void loginCallback(String userid) {
+  void loginCallback() {
     firstimelogin=true;
     getcurrentuser(context);
   }
@@ -73,10 +69,8 @@ class _RootPageState extends State<RootPage> {
           }
   }
   void logoutCallback() {
-    setState(() {
-      authStatus = AuthStatus.NOT_LOGGED_IN;
-      _userId = "";
-    });
+    widget.auth.signOut();
+    getcurrentuser(context);
   }
 
 

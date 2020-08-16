@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:weight_tracker/pages/root.dart';
 import '../services/auth.dart';
 import 'package:weight_tracker/uielements/logo.dart';
-typedef void MyCallback(String userid);
 class LoginSignupPage extends StatefulWidget {
-  LoginSignupPage({this.auth, this.loginCallback});
+  LoginSignupPage({this.auth});
    final BaseAuth auth;
-   final MyCallback loginCallback;
   @override
   State<StatefulWidget> createState() => new _LoginSignupPageState();
 
@@ -57,7 +56,11 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
   }
   Widget showCircularProgress() {
     if (isloading) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: Container(
+               width: 50,
+               height: 50,
+               child: CircularProgressIndicator(backgroundColor: Colors.white70,valueColor: new AlwaysStoppedAnimation<Color>(Colors.tealAccent),
+             )));
     }
     return Container(
       height: 0.0,
@@ -147,7 +150,9 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
           print('Signed up user: $userId');
         }
         if (userId.length > 0 && userId != null ) {
-          widget.loginCallback(userId);
+          Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => new RootPage(
+          auth: widget.auth)));
         }
       } catch (e) {
         print('Error: $e');
