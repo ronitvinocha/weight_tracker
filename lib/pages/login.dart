@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../services/auth.dart';
 import 'package:weight_tracker/uielements/logo.dart';
+typedef void MyCallback(String userid);
 class LoginSignupPage extends StatefulWidget {
   LoginSignupPage({this.auth, this.loginCallback});
    final BaseAuth auth;
-   final VoidCallback loginCallback;
+   final MyCallback loginCallback;
   @override
   State<StatefulWidget> createState() => new _LoginSignupPageState();
 
@@ -15,7 +16,7 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
   bool isloading=false;
   String email,password;
   String errormessage="";
-  bool isloginform=false;
+  bool isloginform=true;
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -29,6 +30,9 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
   }
   Widget _showForm() {
     return new Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(color: Theme.of(context).primaryColor),
         padding: EdgeInsets.all(16.0),
         child: new Form(
           key: _formKey,
@@ -36,7 +40,7 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
             child:  new ListView(
             shrinkWrap: true,
             children: <Widget>[
-              showLogo(),
+              showLogo(context),
               showEmailInput(),
               showPasswordInput(),
               showPrimaryButton(),
@@ -69,11 +73,20 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
+        style: TextStyle(color: Colors.white70),
         decoration: new InputDecoration(
             hintText: 'Email',
+             errorBorder: UnderlineInputBorder(
+               borderSide: BorderSide(color: Colors.white70)
+             ),
+             focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Theme.of(context).accentColor),
+          ),
+             errorStyle: TextStyle(color: Colors.white70),
+            hintStyle: TextStyle(color: Theme.of(context).accentColor),
             icon: new Icon(
               Icons.mail,
-              color: Colors.grey,
+              color: Theme.of(context).accentColor,
             )),
         validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
         onSaved: (value) => email = value.trim(),
@@ -88,11 +101,20 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
         maxLines: 1,
         obscureText: true,
         autofocus: false,
+        style: TextStyle(color: Colors.white70),
         decoration: new InputDecoration(
+            errorBorder: UnderlineInputBorder(
+               borderSide: BorderSide(color: Colors.white70)
+             ),
+            focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Theme.of(context).accentColor),
+          ),
             hintText: 'Password',
+            errorStyle: TextStyle(color: Colors.white70),
+            hintStyle: TextStyle(color: Theme.of(context).accentColor),
             icon: new Icon(
               Icons.lock,
-              color: Colors.grey,
+              color:Theme.of(context).accentColor,
             )),
         validator: (value) => value.isEmpty ? 'Password can\'t be empty' : null,
         onSaved: (value) => password = value.trim(),
@@ -125,7 +147,7 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
           print('Signed up user: $userId');
         }
         if (userId.length > 0 && userId != null ) {
-          widget.loginCallback();
+          widget.loginCallback(userId);
         }
       } catch (e) {
         print('Error: $e');
@@ -152,9 +174,9 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
             elevation: 5.0,
             shape: new RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(30.0)),
-            color: Colors.blue,
+            color: Theme.of(context).accentColor,
             child: new Text(isloginform ? 'Login' : 'Create account',
-                style: new TextStyle(fontSize: 20.0, color: Colors.white)),
+                style: new TextStyle(fontSize: 20.0, color: Colors.black)),
             onPressed: validateAndSubmit,
           ),
         ));
@@ -163,7 +185,7 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
     return new FlatButton(
         child: new Text(
             isloginform ? 'Create an account' : 'Have an account? Sign in',
-            style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
+            style: new TextStyle(fontSize: 18.0,color: Colors.white70, fontWeight: FontWeight.w300)),
         onPressed: toggleFormMode);
   }
   void toggleFormMode() {
@@ -182,8 +204,8 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
         errormessage,
         textAlign: TextAlign.center,
         style: TextStyle(
-            fontSize: 13.0,
-            color: Colors.red,
+            fontSize: 18.0,
+            color: Colors.white,
             height: 1.0,
             fontWeight: FontWeight.w300),
       );

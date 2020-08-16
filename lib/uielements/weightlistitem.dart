@@ -24,8 +24,8 @@ class WeightListItemState extends State<WeightListItem> {
   @override
   Widget build(BuildContext context) {
     return new Container(
-      decoration: BoxDecoration(color:Colors.grey[900],borderRadius: BorderRadius.all(Radius.circular(15))),
-      margin: EdgeInsets.fromLTRB(20, 5, 20, 0),
+      decoration: BoxDecoration(color:Theme.of(context).secondaryHeaderColor,borderRadius: BorderRadius.all(Radius.circular(15))),
+      margin: EdgeInsets.fromLTRB(10, 5, 10, 0),
       child: new Padding(
       padding: new EdgeInsets.only(left: 16,right: 16,top: 20,bottom: 20),
       child:new Column(

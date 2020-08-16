@@ -36,7 +36,7 @@ class AddEntryDialogState extends State<AddEntryDialog> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).primaryColor,
       appBar: _createAppBar(context),
       body: Container(
         margin: EdgeInsets.only(top: 20),
@@ -50,21 +50,19 @@ class AddEntryDialogState extends State<AddEntryDialog> {
               new WeightPicker(setWeight: updateselectedweight,previousweight: widget.previousorlastweight.weight)
         ]),
       ),
-     floatingActionButton: Container(
-                decoration: new BoxDecoration(color: Theme.of(context).accentColor,borderRadius: BorderRadius.all(Radius.circular(50)),),
-                width: 250.0,
-                height: 50.0,
-                child: new RawMaterialButton(
-                  shape: new CircleBorder(),
-                  elevation: 0.0,
+     floatingActionButton: SizedBox(height: 40,width: 200,
+                    child: new RaisedButton(
+                    elevation: 5.0,
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)),
+                      color: Theme.of(context).accentColor,
                   child: Text("Save",style: TextStyle(fontFamily: 'roboto',fontSize: 20,fontWeight: FontWeight.bold),),
                 onPressed: (){
                     Navigator
                   .of(context)
                   .pop(new Weight(weight: _selectedweight,dateTime: _selectedDate));
                   },
-                )
-          ),
+                )),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
      );
   }
@@ -76,7 +74,7 @@ class AddEntryDialogState extends State<AddEntryDialog> {
   Widget _createAppBar(BuildContext context) {
     return new AppBar(
       title: widget.iseditoperation?const Text('Edit weight'):const Text('Add weight'),
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).primaryColor,
       actions: [
         Visibility(
           visible: widget.iseditoperation,

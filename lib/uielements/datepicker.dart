@@ -63,7 +63,7 @@ class DatePickerState extends State<DatePicker>{
             datePickerStyles: styles,
             datePickerLayoutSettings: dp.DatePickerLayoutSettings(maxDayPickerRowCount: 2),
           ),
-            decoration: BoxDecoration(color: Colors.grey[900],borderRadius: BorderRadius.circular(15)),
+            decoration: BoxDecoration(color: Theme.of(context).secondaryHeaderColor,borderRadius: BorderRadius.circular(15)),
           );
   }
 void _onSelectedDateChanged(DateTime newDate) {

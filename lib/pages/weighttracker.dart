@@ -36,7 +36,7 @@ class _WeightTrackerPageState extends State<WeightTracker>
        builder: (context,weighttrackker,child){
          return new Scaffold(
            body:new Container(
-               decoration: BoxDecoration(color: Colors.black),
+               decoration: BoxDecoration(color:Theme.of(context).primaryColor),
                 child: new Column(
                 children: [
                 new Flexible(
@@ -54,13 +54,12 @@ class _WeightTrackerPageState extends State<WeightTracker>
                 ))
               ],)
       ),
-           floatingActionButton: Container(
-                decoration: new BoxDecoration(color: Theme.of(context).accentColor.withOpacity(0.75),borderRadius: BorderRadius.all(Radius.circular(50)),),
-                width: 200.0,
-                height: 50.0,
-                child: new RawMaterialButton(
-                  shape: new CircleBorder(),
-                  elevation: 0.0,
+           floatingActionButton:  SizedBox(height: 40,width: 200,
+                    child: new RaisedButton(
+                    elevation: 5.0,
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)),
+                      color: Theme.of(context).accentColor,
                   child: Text("New Weight",style: TextStyle(fontFamily: 'roboto',fontSize: 20,fontWeight: FontWeight.bold),
                   ),
                 onPressed: (){
@@ -69,8 +68,7 @@ class _WeightTrackerPageState extends State<WeightTracker>
                     else
                     showAddWeightDialog(context,null);
                   },
-                )
-          ),
+                )),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
          );
           },

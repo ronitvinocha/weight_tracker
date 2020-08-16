@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weight_tracker/model/weightmodel.dart';
@@ -24,34 +26,52 @@ class RootPage extends StatefulWidget {
 class _RootPageState extends State<RootPage> {
   AuthStatus authStatus = AuthStatus.NOT_DETERMINED;
   String _userId = "";
+  bool firstimelogin=true;
   @override
   void initState() {
     super.initState();
-    getcurrentuser();
   }
-  void getcurrentuser()
+  void getcurrentuser(BuildContext context) async
   {
-    widget.auth.getCurrentUser().then((user) {
+    if(firstimelogin)
+      {
+        widget.auth.getCurrentUser().then((user) {
       setState(() {
         if (user != null) {
           print(user?.uid);
           _userId = user?.uid;
+          if (_userId.length > 0 && _userId != null) {
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) =>
+              new ChangeNotifierProvider<WeightModel>(builder: (context) => WeightModel(_userId),
+              child: new WeightTracker())
+              ),(Route<dynamic> route) => false);
+          }
         }
+        else {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => new LoginSignupPage(
+          auth: widget.auth,
+          loginCallback: loginCallback)));
+          }
         authStatus =
             user?.uid == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
       });
     });
+      firstimelogin=false;
+      }
   }
-  void loginCallback() {
-    print("🐹");
-    widget.auth.getCurrentUser().then((user) {
-      setState(() {
-        _userId = user.uid.toString();
-        authStatus = AuthStatus.LOGGED_IN;
-      });
-    });
+  void loginCallback(String userid) {
+    firstimelogin=true;
+    getcurrentuser(context);
   }
-
+  void gotomain()
+  {
+     if (_userId.length > 0 && _userId != null) {
+              Navigator.push(context, MaterialPageRoute(builder: (context) =>
+              new ChangeNotifierProvider<WeightModel>(builder: (context) => WeightModel(_userId),
+              child: new WeightTracker())
+              ));
+          }
+  }
   void logoutCallback() {
     setState(() {
       authStatus = AuthStatus.NOT_LOGGED_IN;
@@ -59,47 +79,22 @@ class _RootPageState extends State<RootPage> {
     });
   }
 
-  Widget buildWaitingScreen() {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [showLogo(),
-        new Container(
-          margin: const EdgeInsets.only(top: 10.0),
-          child:  Text(
-          'Weight Tracker',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontFamily: 'roboto',fontSize: 20),
-        ),
-        )
-       ]
-    ));
-  }
+
 
   @override
   Widget build(BuildContext context) {
-    switch (authStatus) {
-      case AuthStatus.NOT_DETERMINED:
-        return buildWaitingScreen();
-        break;
-      case AuthStatus.NOT_LOGGED_IN:
-        return new LoginSignupPage(
-          auth: widget.auth,
-          loginCallback: loginCallback,
+  getcurrentuser(context);
+  return Scaffold(
+     body:  Container(
+             height: double.infinity,
+             width: double.infinity,
+             decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+             child: Center(child: Container(
+               width: 50,
+               height: 50,
+               child: CircularProgressIndicator(backgroundColor: Colors.white70,valueColor: new AlwaysStoppedAnimation<Color>(Colors.tealAccent),
+             ),)
+          ),)
         );
-        break;
-      case AuthStatus.LOGGED_IN:
-        if (_userId.length > 0 && _userId != null) {
-          return ChangeNotifierProvider<WeightModel>(
-            builder: (context) => WeightModel(_userId),
-            child: new WeightTracker()
-        );
-        } else
-          return buildWaitingScreen();
-        break;
-      default:
-        return buildWaitingScreen();
-    }
   }
 }

@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor: Colors.black, // navigation bar color
-    statusBarColor: Colors.black, // status bar color
+    systemNavigationBarColor:  Color(0xFF111122), // navigation bar color
+    statusBarColor:  Color(0xFF111122), // status bar color
   ));
   runApp(new MyApp());
 }
@@ -18,9 +18,10 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       theme: new ThemeData(
         brightness: Brightness.light,
-        primaryColor: Color(0xFF335C81),
-        accentColor: Colors.tealAccent,
-        splashColor: Color(0xFF3BB273),
+        primaryColor: Color(0xFF111122),
+        secondaryHeaderColor: Color(0xFF18182A),
+        accentColor: Color(0xFF29FFCB),
+        splashColor: Colors.white70,
         fontFamily: "roboto",
         textTheme: TextTheme(caption: TextStyle(color: Colors.white))
       ),

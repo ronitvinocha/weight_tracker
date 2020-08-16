@@ -32,7 +32,7 @@ class WeightPickerState extends State<WeightPicker>{
   int lastvisibleitemindex=((scrollOffset+viewportHeight)/(scrollRange + viewportHeight) * itemCount).floor();
   double factor=(lastvisibleitemindex-firstVisibleItemIndex)/2;
   setState(() {
-    selectedweight=(((firstVisibleItemIndex+factor)/10)+0.2).roundToDouble();
+    selectedweight=(((firstVisibleItemIndex+factor)/10)).roundToDouble();
     widget.setWeight(selectedweight);
   });
 }
@@ -40,10 +40,9 @@ void firstscroll()
 {
   if(!firsttimescrolling)
     {
-      print(selectedweight);
       double scrollRange = scrollController.position.maxScrollExtent -
                         scrollController.position.minScrollExtent;
-      double offset=(selectedweight+3)*(scrollRange/150);
+      double offset=(selectedweight)*(scrollRange/150);
       scrollController.jumpTo(offset);
       firsttimescrolling=true;
     }
@@ -87,8 +86,8 @@ void firstscroll()
              child:new ListView.builder(
                  shrinkWrap: true,
                  physics:  AlwaysScrollableScrollPhysics (),
-                 addAutomaticKeepAlives: true,
                  itemCount: 150*10,
+                 itemExtent: 17,
                  scrollDirection: Axis.horizontal,
                  controller: scrollController,
                  itemBuilder: (context,index){
@@ -104,7 +103,6 @@ void firstscroll()
                       return  InkWell(
                         child: Container(
                         child:new DecimalLine(),
-                        height: 40,
                         width: 10,
                         ),
                         onTap: (){
@@ -118,13 +116,15 @@ void firstscroll()
                     {
                       return InkWell(
                         child: new Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
                             child: intLine((index/10).toInt()),
+                            margin: EdgeInsets.only(bottom: 3,left: 0,right: 1),
                             height: 30,
                             width: 10,
                           ),
-                          Text((index/10).toInt().toString(),style: TextStyle(color: Colors.white70),)
+                          Text((index/10).toInt().toString(),style: TextStyle(color: Colors.white70,fontSize: 10),textAlign: TextAlign.center,)
                         ],
                           mainAxisSize: MainAxisSize.max,
                       ),
@@ -146,27 +146,6 @@ void firstscroll()
    );
 
 
-  }
-  Widget selectedLine()
-  {
-    return Padding(
-      child:VerticalDivider(color: Theme.of(context).accentColor,
-          thickness: 5, width: 5,
-          indent: 0,
-          endIndent: 50),
-      padding: EdgeInsets.only(left: 5,right: 5),
-    );
-  }
-
-  Widget decimalLine()
-  {
-    return Padding(
-      child:VerticalDivider(color: Colors.white70,
-          thickness: 2, width: 2,
-          indent: 10,
-          endIndent: 70),
-      padding: EdgeInsets.only(left: 5,right: 5),
-    );
   }
   Widget intLine(int value)
   {
