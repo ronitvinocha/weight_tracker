@@ -89,19 +89,7 @@ class WeightListItemState extends State<WeightListItem> {
 
 
   }
-
-  String _differenceText(double weightDifference) {
-      {
-        if (weightDifference > 0) {
-          return "+" + weightDifference.toStringAsFixed(1)+" kg";
-        } else if (weightDifference < 0) {
-          return weightDifference.toStringAsFixed(1)+" kg";
-        } else {
-          return "0 kg";
-        }
-      }
-  }
-  Future showEditWeightDialog(BuildContext context,Weight previosweight) async {
+  void showEditWeightDialog(BuildContext context,Weight previosweight) async {
     Weight weight = await Navigator.of(context).push(
         new MaterialPageRoute<Weight>(
             builder: (BuildContext context) {

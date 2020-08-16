@@ -4,7 +4,8 @@ import 'package:flutter_date_pickers/flutter_date_pickers.dart' as dp;
 class DatePicker extends StatefulWidget
 {
   final ValueChanged<DateTime> setparentselectedDate;
-  DatePicker({this.setparentselectedDate});
+  DateTime fixedDate;
+  DatePicker({this.setparentselectedDate,this.fixedDate});
   @override
   State<StatefulWidget> createState() =>DatePickerState();
 
@@ -15,12 +16,13 @@ class DatePickerState extends State<DatePicker>{
   DateTime _lastDate;
   Color selectedDateStyleColor;
   Color selectedSingleDateDecorationColor;
+  dp.DatePickerStyles styles;
   @override
   void initState() {
     super.initState();
-    _firstDate = DateTime.now();
-    _selectedDate = DateTime.now();
-    _lastDate = DateTime.now();
+    _firstDate = widget.fixedDate;
+    _selectedDate = widget.fixedDate;
+    _lastDate = widget.fixedDate;
   }
   @override
   void didChangeDependencies() {
@@ -28,11 +30,7 @@ class DatePickerState extends State<DatePicker>{
     // defaults for styles
     selectedDateStyleColor = Colors.white;
     selectedSingleDateDecorationColor = Theme.of(context).accentColor;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-     dp.DatePickerStyles styles = dp.DatePickerRangeStyles(
+    styles = dp.DatePickerRangeStyles(
         nextIcon: Icon(Icons.arrow_forward_ios,color: Colors.white,),
         prevIcon: Icon(Icons.arrow_back_ios,color: Colors.white,),
         disabledDateStyle: TextStyle(color: Colors.grey),
@@ -48,6 +46,10 @@ class DatePickerState extends State<DatePicker>{
         displayedPeriodTitle: TextStyle(color: Colors.white),
         selectedSingleDateDecoration: BoxDecoration(
             color: Theme.of(context).accentColor, shape: BoxShape.circle));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
           margin: EdgeInsets.only(left: 16,right: 16),

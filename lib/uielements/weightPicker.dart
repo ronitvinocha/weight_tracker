@@ -77,12 +77,7 @@ void firstscroll()
            margin: EdgeInsets.symmetric(vertical: 15.0),
            child: NotificationListener<ScrollNotification>(
              onNotification: (scrollNotification) {
-                if (scrollNotification is ScrollStartNotification) {
-                  
-                } else if (scrollNotification is ScrollUpdateNotification) {
-
-
-                } else if (scrollNotification is ScrollEndNotification) {
+                if (scrollNotification is ScrollEndNotification) {
                   if(firsttimescrolling)
                     {
                        WidgetsBinding.instance.addPostFrameCallback((_) => getmiddleindex());
@@ -90,7 +85,9 @@ void firstscroll()
                 }
               },
              child:new ListView.builder(
-                 physics: const AlwaysScrollableScrollPhysics (),
+                 shrinkWrap: true,
+                 physics:  AlwaysScrollableScrollPhysics (),
+                 addAutomaticKeepAlives: true,
                  itemCount: 150*10,
                  scrollDirection: Axis.horizontal,
                  controller: scrollController,
@@ -98,7 +95,7 @@ void firstscroll()
                    if(index/10==selectedweight)
                      {
                        return  Container(
-                        child:selectedLine(),
+                        child:new SelectedLine(),
                         height: 10,
                       );
                      }
@@ -106,7 +103,7 @@ void firstscroll()
                     {
                       return  InkWell(
                         child: Container(
-                        child:decimalLine(),
+                        child:new DecimalLine(),
                         height: 40,
                         width: 10,
                         ),
@@ -183,3 +180,42 @@ void firstscroll()
   }
 
 }
+class SelectedLine extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      child:VerticalDivider(color: Theme.of(context).accentColor,
+          thickness: 5, width: 5,
+          indent: 0,
+          endIndent: 50),
+      padding: EdgeInsets.only(left: 5,right: 5),
+    );
+  }
+
+}
+class DecimalLine extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      child:VerticalDivider(color: Colors.white70,
+          thickness: 2, width: 2,
+          indent: 10,
+          endIndent: 70),
+      padding: EdgeInsets.only(left: 5,right: 5),
+    );
+  }
+
+}
+class IntLine extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+   return Padding(
+     child:VerticalDivider(color: Colors.white70,
+          thickness: 2, width: 2,
+          indent: 0,
+          endIndent: 0),
+     padding: EdgeInsets.only(left:5,right: 5),
+   );
+  }
+  }
+

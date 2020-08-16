@@ -36,23 +36,23 @@ class _WeightTrackerPageState extends State<WeightTracker>
        builder: (context,weighttrackker,child){
          return new Scaffold(
            body:new Container(
-        decoration: BoxDecoration(color: Colors.black),
-        child: new Column(
-        children: [
-        new Flexible(
-            child: new ListView.builder(
-           physics: const AlwaysScrollableScrollPhysics (),
-          controller: scrollController,
-          padding: new EdgeInsets.fromLTRB(0, 20, 0, 8),
-          itemBuilder: (context, index) {
-            if(index==weighttrackker.items.length-1)
-            return new WeightListItem(weight: weighttrackker.items[index], weightDifference: 0) ;
-            else
-            return new WeightListItem(weight:weighttrackker.items[index],weightDifference:weighttrackker.items[index].weight-weighttrackker.items[index+1].weight );
-          },
-          itemCount: weighttrackker.items.length,
-        ))
-      ],)
+               decoration: BoxDecoration(color: Colors.black),
+                child: new Column(
+                children: [
+                new Flexible(
+                    child: new ListView.builder(
+                   physics: const AlwaysScrollableScrollPhysics (),
+                  controller: scrollController,
+                  padding: new EdgeInsets.fromLTRB(0, 20, 0, 8),
+                  itemBuilder: (context, index) {
+                    if(index==weighttrackker.items.length-1)
+                    return new WeightListItem(weight: weighttrackker.items[index], weightDifference: 0) ;
+                    else
+                    return new WeightListItem(weight:weighttrackker.items[index],weightDifference:weighttrackker.items[index].weight-weighttrackker.items[index+1].weight );
+                  },
+                  itemCount: weighttrackker.items.length,
+                ))
+              ],)
       ),
            floatingActionButton: Container(
                 decoration: new BoxDecoration(color: Theme.of(context).accentColor.withOpacity(0.75),borderRadius: BorderRadius.all(Radius.circular(50)),),
@@ -78,20 +78,21 @@ class _WeightTrackerPageState extends State<WeightTracker>
 
         );
        }
+       void showAddWeightDialog(BuildContext context,Weight lastweight)async  {
+        Weight weight=await Navigator.of(context).push(new MaterialPageRoute<Weight>(
+            builder: (BuildContext context) {
+              return  AddEntryDialog(
+                  previousorlastweight: lastweight, iseditoperation: false);
+            },
+        ));
+        if(weight!=null)
+          {
+            print("🐱${weight.weight}");
+             Provider.of<WeightModel>(context).add(weight);
+          }
+        }
 }
 
-Future showAddWeightDialog(BuildContext context,Weight lastweight) async {
-   Weight weight= await Navigator.of(context).push(new MaterialPageRoute<Weight>(
-      builder: (BuildContext context) {
-        return new AddEntryDialog(previousorlastweight: lastweight,iseditoperation: false);
-      },
-    fullscreenDialog: true
-  ));
-  if(weight!=null)
-    {
-      print("🐱${weight.weight}");
-       Provider.of<WeightModel>(context).add(weight);
-    }
-  }
+
 
 //

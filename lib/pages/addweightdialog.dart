@@ -42,10 +42,8 @@ class AddEntryDialogState extends State<AddEntryDialog> {
         margin: EdgeInsets.only(top: 20),
         child:  new Column(
         children: [
-          Visibility(
-            child:  new DatePicker(setparentselectedDate: updateselectedDateTime),
-            visible: !widget.iseditoperation,
-          ),
+          widget.iseditoperation?new DatePicker(setparentselectedDate: updateselectedDateTime,fixedDate: widget.previousorlastweight.dateTime,):
+              new DatePicker(setparentselectedDate: updateselectedDateTime,fixedDate: DateTime.now()),
           widget.previousorlastweight==null?
               new WeightPicker(setWeight: updateselectedweight,previousweight: 60)
               :
